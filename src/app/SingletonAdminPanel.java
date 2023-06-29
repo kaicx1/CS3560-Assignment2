@@ -17,7 +17,7 @@ public class SingletonAdminPanel extends JFrame implements ActionListener {
 	private JPanel treePanel, optionPanel;
 	private JLabel treeTitle;
 	private JButton addGroup, addUser, openUserView, showUserTotal, showGroupTotal, showMessagesTotal,
-			showPositivePercentage;
+			showPositivePercentage, showIDVerification, showLastUpdatedUser;
 	private JTextField userID, groupID;
 	private NodeType root;
 	private NodeTreeModel treeModel;
@@ -29,6 +29,7 @@ public class SingletonAdminPanel extends JFrame implements ActionListener {
 
 	// making GUI for admin panel
 	public void init() {
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		getContentPane().setLayout(null);
 		setTitle("Mini Twitter");
 		setSize(775, 400);
@@ -48,6 +49,8 @@ public class SingletonAdminPanel extends JFrame implements ActionListener {
 		addUser = new JButton("Add User");
 		addGroup = new JButton("Add Group");
 		openUserView = new JButton("Open User View");
+		showIDVerification = new JButton("ID Verification");
+		showLastUpdatedUser = new JButton("Show Last Updated User");
 		userID = new JTextField();
 		groupID = new JTextField();
 
@@ -63,15 +66,17 @@ public class SingletonAdminPanel extends JFrame implements ActionListener {
 		treeJScrollPane.setBounds(10, 40, 280, 300);
 
 		styleTitleLabel(treeTitle, 0, 5, 100, 30);
-		styleButton(addUser, 230, 30, 210, 35);
-		styleButton(addGroup, 230, 90, 210, 35);
-		styleButton(openUserView, 10, 150, 430, 35);
-		styleButton(showUserTotal, 10, 210, 210, 35);
-		styleButton(showGroupTotal, 230, 210, 210, 35);
-		styleButton(showMessagesTotal, 10, 270, 210, 35);
-		styleButton(showPositivePercentage, 230, 270, 210, 35);
-		userID.setBounds(10, 30, 210, 35);
-		groupID.setBounds(10, 90, 210, 35);
+		styleButton(addUser, 230, 20, 210, 35);
+		styleButton(addGroup, 230, 70, 210, 35);
+		styleButton(openUserView, 10, 130, 430, 35);
+		styleButton(showUserTotal, 10, 170, 210, 35);
+		styleButton(showGroupTotal, 230, 170, 210, 35);
+		styleButton(showMessagesTotal, 10, 220, 210, 35);
+		styleButton(showPositivePercentage, 230, 220, 210, 35);
+		styleButton(showIDVerification, 10, 270, 210, 35);
+		styleButton(showLastUpdatedUser, 230, 270, 210, 35);
+		userID.setBounds(10, 20, 210, 35);
+		groupID.setBounds(10, 70, 210, 35);
 
 		// adding all panels, buttons, textfields, trees, etc
 		treePanel.add(treeJScrollPane);
@@ -85,6 +90,8 @@ public class SingletonAdminPanel extends JFrame implements ActionListener {
 		optionPanel.add(addGroup);
 		optionPanel.add(groupID);
 		optionPanel.add(openUserView);
+		optionPanel.add(showIDVerification);
+		optionPanel.add(showLastUpdatedUser);
 		setVisible(true);
 	}
 
@@ -103,6 +110,10 @@ public class SingletonAdminPanel extends JFrame implements ActionListener {
 			getMessagesTotal();
 		} else if (clicked.getSource() == showPositivePercentage) {
 			getPositivePercentage();
+		} else if (clicked.getSource() == showIDVerification) {
+			getIDVerification();
+		} else if (clicked.getSource() == showLastUpdatedUser){
+			getLastUpdatedUser();
 		}
 	}
 
@@ -183,6 +194,27 @@ public class SingletonAdminPanel extends JFrame implements ActionListener {
 				"Positive Percentage", JOptionPane.PLAIN_MESSAGE);
 	}
 
+	private void getIDVerification(){
+		boolean result;
+		FindIDVerification vis = new FindIDVerification();
+		root.accept(vis);
+		result = vis.IDboolean;
+		if (result == true){
+			JOptionPane.showMessageDialog(this, "All IDs are valid", "ID validation", JOptionPane.PLAIN_MESSAGE);
+		} else {
+			JOptionPane.showMessageDialog(this, "All IDs are not valid", "ID validation", JOptionPane.PLAIN_MESSAGE);
+		}
+
+	}
+
+	private void getLastUpdatedUser(){
+		String result;
+		FindLastUpdatedUser vis = new FindLastUpdatedUser();
+		root.accept(vis);
+		result = vis.lastUpdated;
+		JOptionPane.showMessageDialog(this, "Last updated user: " + result, "Updated User", JOptionPane.PLAIN_MESSAGE);
+	}
+
 	private NodeType getSelectedNodeType() {
 		NodeType result = ((NodeType) tree.getLastSelectedPathComponent());
 		if (result == null) {
@@ -190,6 +222,8 @@ public class SingletonAdminPanel extends JFrame implements ActionListener {
 		}
 		return result;
 	}
+
+
 
 	// Creating styling to keep everything uniform
 	protected void styleButton(JButton b, int x, int y, int w, int h) {

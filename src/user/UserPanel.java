@@ -22,7 +22,8 @@ public class UserPanel extends SingletonAdminPanel {
 
 	public void init() {
 		getContentPane().setLayout(null);
-		setTitle("User View - " + user.getUniqueID());
+		// setting title to user and time created 
+		setTitle("User View - " + user.getUniqueID() + " || Created at " + user.getCreationTime());
 		setSize(470, 500);
 
 		// setting all 

@@ -6,11 +6,13 @@ import java.util.ArrayList;
 import tree.*;
 
 public class Group implements NodeType {
+	private long creationTime;
 	private String uniqueID;
 	private ArrayList<NodeType> children;
 
 	public Group(NodeTreeModel treeModel, String uniqueID) {
 		this.uniqueID = uniqueID;
+		this.creationTime = System.currentTimeMillis();
 		children = new ArrayList<>();
 	}
 
@@ -52,6 +54,10 @@ public class Group implements NodeType {
 		for (NodeType node: children){
 			node.openUserView();
 		}
+	}
+
+	public long getCreationTime(){
+		return creationTime;
 	}
 
 }

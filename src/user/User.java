@@ -15,10 +15,14 @@ public class User extends Subject implements Observer, NodeType {
 	private String uniqueID;
 	private ArrayList<String> tweets, feed;
 	private ArrayList<User> following;
+	private long creationTime;
+	private long lastUpdateTime;
 
 	public User(NodeTreeModel treeModel, String uniqueID) {
 		this.uniqueID = uniqueID;
 		this.treeModel = treeModel;
+		creationTime = System.currentTimeMillis();
+		lastUpdateTime = System.currentTimeMillis();
 
 		following = new ArrayList<User>();
 		tweets = new ArrayList<String>();
@@ -66,9 +70,21 @@ public class User extends Subject implements Observer, NodeType {
 		userView.setVisible(true);
 	}
 
+	public long getCreationTime(){
+		return creationTime;
+	}
+
 	// Not NodeType
 
 	// return arraylist of tweets
+	public long getLastUpdateTime(){
+		return lastUpdateTime;
+	}
+
+	public void printLastUpdateTime(){
+		System.out.println(uniqueID + " was updated at " + lastUpdateTime);
+	}
+
 	public ArrayList<String> getTweets() {
 		return tweets;
 	}
@@ -84,17 +100,21 @@ public class User extends Subject implements Observer, NodeType {
 		}
 	}
 
-	public void postToNewsFeed(String tweet) {
-		feed.add(tweet);
-		userView.addTweetToNewsFeed(tweet);
-	}
-
 	public void postTweet(String tweet) {
 		tweets.add(tweet);
 		notifyObservers();
 	}
 
+	public void postToNewsFeed(String tweet) {
+		lastUpdateTime = System.currentTimeMillis();
+		printLastUpdateTime();
+		feed.add(tweet);
+		userView.addTweetToNewsFeed(tweet);
+	}
+
 	public boolean followUser(String userID) {
+		lastUpdateTime = System.currentTimeMillis();
+		printLastUpdateTime();
 		User followUser = (User) treeModel.findNodeByID((NodeType) treeModel.getRoot(), userID);
 		if (followUser != null) {
 			if(!following.contains(followUser)){

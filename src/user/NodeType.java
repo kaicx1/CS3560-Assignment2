@@ -17,4 +17,6 @@ public interface NodeType {
 	public void accept(Visitor vis);
 
 	public void openUserView();
+
+	public long getCreationTime();
 }
